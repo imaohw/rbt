@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use utf8;
 
-use LWP::Simple;
+use LWP::UserAgent;
 
 sub new {
     my $class = shift;
@@ -31,11 +31,11 @@ sub _print_title {
 
     if($event->{args}[0] =~ /(https?:\/\/.*?)( |$)/) {
         my $url = $1;
-        
-        my @head = head($url);
-        if(@head && $head[0] =~ /text\/html.*/) {
-            my $page = get($url);
-            if($page && $page =~ /<title>(.*)<\/title>/) {
+        my $ua = LWP::UserAgent->new();
+        my $res = $ua->head($url);
+        if($res->header('Content-Type') =~ /text\/html.*/) {
+            $res = $ua->get($url);
+            if($res->content =~ /<title>(.*)<\/title>/) {
                 $con->privmsg($event->{to}[0], "URL: $1");
             }
         }

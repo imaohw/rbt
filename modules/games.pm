@@ -40,7 +40,7 @@ sub _jn {
     }
 
     my $to = $event->{type} eq 'msg' ? $event->{nick} : $event->{to}[0];
-    my $answer int(rand(2)) ? "Yes" : "No";
+    my $answer = int(rand(2)) ? "Yes" : "No";
 
     $con->privmsg($to, $answer);
 }
