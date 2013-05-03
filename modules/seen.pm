@@ -68,7 +68,7 @@ sub _seen {
 
     if($self->{_data}->{$cl->[1]}) {
         my $time = $self->_sec2human(time() - $self->{_data}->{$cl->[1]}->{time});
-        $line .= "$cl->[1] was last seen $time ago: $self->{_data}->{$event->{nick}}->{said}";
+        $line .= "$cl->[1] was last seen $time ago: $self->{_data}->{$cl->[1]}->{said}";
     } else {
         $line .= "I don't know this humanoid";
     }
