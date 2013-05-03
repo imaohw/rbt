@@ -90,10 +90,12 @@ sub _public_msg {
         if($cl[0]) {
             foreach(keys($self->{_modules})) {
                 if($self->{_modules}->{$_}->{commands}->{$cl[0]}) {
-                    $self->{_modules}->{$_}->{commands}->{$cl[0]}->($self->{_modules}->{$_}->{instance}, ($con, $event));
+                    $self->{_modules}->{$_}->{commands}->{$cl[0]}->($self->{_modules}->{$_}->{instance}, ($con, $event, \@cl));
                 }
             }
         }
+    } else {
+        $self->_handle_event($con, $event);
     }
 }
 
@@ -122,7 +124,7 @@ sub _write_default_config {
             callsign => '!'
         },
         server => {
-            hostname => "irc.host",
+            hostname => "irc.example.com",
             port => "6667",
             ssl => "0"
         },
@@ -133,8 +135,15 @@ sub _write_default_config {
                 ]
             },
             wiki => {
-                url => 'http://dokuwiku.example',
+                url => 'http://dokuwiki.example.com',
                 amount => '5'
+            },
+            url => {},
+            weather => {},
+            games => {
+                roulette => {
+                    bantime => 300
+                }
             }
         }
     };
