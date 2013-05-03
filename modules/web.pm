@@ -42,7 +42,7 @@ sub _google {
 
     my $page = get("https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=$st&safe=off");
     if($page) {
-        my $data = decode_json($page);
+        my $data = JSON->new->utf8(0)->decode($page);
         if($data->{responseStatus} && $data->{responseStatus} == 200) {
             my $line = "Google: $data->{responseData}->{cursor}->{resultCount} Results";
             foreach(@{$data->{responseData}->{results}}) {
