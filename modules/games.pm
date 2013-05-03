@@ -19,13 +19,30 @@ sub get_commands {
     my $self = shift;
     return { 
         'roulette' => \&games::_roulette,
-        '8ball' => \&games::_eightball
+        '8ball' => \&games::_eightball,
+        'jn' => \&games::_jn
     };
 }
 
 sub get_event_handlers {
     my $self = shift;
     return {};
+}
+
+sub _jn {
+    my $self = shift;
+    my $con = shift;
+    my $event = shift;
+    my $cl = shift;
+
+    unless($cl->[1]) {
+        return;
+    }
+
+    my $to = $event->{type} eq 'msg' ? $event->{nick} : $event->{to}[0];
+    my $answer int(rand(2)) ? "Yes" : "No";
+
+    $con->privmsg($to, $answer);
 }
 
 sub _eightball {
