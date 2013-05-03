@@ -4,8 +4,6 @@ use strict;
 use warnings;
 use utf8;
 
-use Data::Dumper;
-
 sub new {
     my $class = shift;
     my $config = shift;
@@ -19,12 +17,49 @@ sub new {
 
 sub get_commands {
     my $self = shift;
-    return { 'roulette' => \&games::_roulette };
+    return { 
+        'roulette' => \&games::_roulette,
+        '8ball' => \&games::_eightball
+    };
 }
 
 sub get_event_handlers {
     my $self = shift;
     return {};
+}
+
+sub _eightball {
+    my $self = shift;
+    my $con = shift;
+    my $event = shift;
+    my $cl = shift;
+
+    my @answers = (
+        "Signs point to yes",
+        "Yes",
+        "Without a doubt",
+        "As I see it, yes",
+        "Most likely",
+        "You may rely on it",
+        "Yes definitely",
+        "It is decidedly so",
+        "Outlook good",
+        "It is certain",
+        "My sources say no",
+        "Very doubtful",
+        "Don't count on it",
+        "Outlook not so good",
+        "My reply is no",
+        "Reply hazy, try again",
+        "Concentrate and ask again",
+        "Better not tell you now",
+        "Cannot predict now",
+        "Ask again later"
+    );
+
+    if($cl->[1]) {
+        $con->privmsg($event->{to}[0], $answers[int(rand(@answers))]);
+    }
 }
 
 sub _roulette {
