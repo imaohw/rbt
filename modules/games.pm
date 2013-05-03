@@ -56,9 +56,11 @@ sub _eightball {
         "Cannot predict now",
         "Ask again later"
     );
+    
+    my $to = $event->{type} eq 'msg' ? $event->{nick} : $event->{to}[0];
 
     if($cl->[1]) {
-        $con->privmsg($event->{to}[0], $answers[int(rand(@answers))]);
+        $con->privmsg($to, $answers[int(rand(@answers))]);
     }
 }
 
@@ -67,6 +69,10 @@ sub _roulette {
     my $con = shift;
     my $event = shift;
     my $cl = shift;
+
+    if($event->{type} eq 'msg') {
+        return;
+    }
 
     if($self->{_roulette} == 0) {
         $con->me($event->{to}[0], "reloads and spins the chambers.");

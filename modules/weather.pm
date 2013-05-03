@@ -31,8 +31,10 @@ sub _weather {
     my $event = shift;
     my $cl = shift;
 
+    my $to = $event->{type} eq 'msg' ? $event->{nick} : $event->{to}[0];
+
     unless($cl->[1]) {
-        $con->privmsg($event->{to}[0], "I need a city you stupid human");
+        $con->privmsg($to, "I need a city you stupid human");
         return;
     }
 
@@ -59,7 +61,7 @@ sub _weather {
                 $line .= "Humidity: $data->{current_observation}->{relative_humidity} | ";
                 $line .= "Pressure: $data->{current_observation}->{pressure_mb}mbar";
 
-                $con->privmsg($event->{to}[0], $line);
+                $con->privmsg($to, $line);
             }
         }
     }

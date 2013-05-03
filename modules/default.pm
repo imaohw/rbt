@@ -26,8 +26,10 @@ sub _whoami {
     my $self = shift;
     my $con = shift;
     my $event = shift;
+    
+    my $to = $event->{type} eq 'msg' ? $event->{nick} : $event->{to}[0];
 
-    $con->privmsg($event->{to}[0], "You are $event->{nick}");
+    $con->privmsg($to, "You are $event->{nick}");
 }
 
 sub _join_channels {

@@ -38,6 +38,8 @@ sub _google {
     my $st = join(" ", @$cl);
     $st = uri_escape($st);
 
+    my $to = $event->{type} eq 'msg' ? $event->{nick} : $event->{to}[0];
+
     my $page = get("https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=$st&safe=off");
     if($page) {
         my $data = decode_json($page);
@@ -47,12 +49,12 @@ sub _google {
                 $line .= " | $_->{unescapedUrl} - $_->{title}";
             }
             $line =~ s/<\/?b>//g;
-            $con->privmsg($event->{to}[0], $line);
+            $con->privmsg($to, $line);
 
             return;
         }
     }
 
-    $con->privmsg($event->{to}[0], "I am very sorry but i broke Google");
+    $con->privmsg($to, "I am very sorry but i broke Google");
 }
 1;

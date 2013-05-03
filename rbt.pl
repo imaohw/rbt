@@ -62,9 +62,10 @@ sub run {
                             );
     #closure magic
     my $evth = sub { $self->_handle_event(@_); };
-    my $pubh = sub { $self->_public_msg(@_); };
+    my $pubh = sub { $self->_msg(@_); };
     $con->add_global_handler('endofmotd', $evth);
     $con->add_global_handler('public', $pubh);
+    $con->add_global_handler('msg', $pubh);
     $irc->start;
 }
 
@@ -80,12 +81,13 @@ sub _handle_event {
     }
 }
 
-sub _public_msg {
+sub _msg {
     my ($self, $con, $event) = @_;
- 
-    if($self->{_config}->{bot}->{callsign} eq substr(@{$event->{args}}[0],0,1)) {
-        my $line = substr(${$event->{args}}[0],1);
-        my @cl = split(/ /, $line);
+    
+    if(($self->{_config}->{bot}->{callsign} eq substr(@{$event->{args}}[0],0,1)) || $event->{type} eq 'msg') {
+        my $cmd = ${$event->{args}}[0];
+        $cmd =~ s/^$self->{_config}->{bot}->{callsign}//;
+        my @cl = split(/ /, $cmd);
 
         if($cl[0]) {
             foreach(keys($self->{_modules})) {
