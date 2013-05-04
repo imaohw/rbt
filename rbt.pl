@@ -154,6 +154,9 @@ sub _write_default_config {
                 url => "http://flyspray.example.com",
                 num => "5",
                 project => "2"
+            },
+            seen => {
+                database => "seen.json"
             }
         }
     };
