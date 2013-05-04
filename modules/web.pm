@@ -4,11 +4,10 @@ use strict;
 use warnings;
 use utf8;
 
+use Encode;
 use JSON;
 use LWP::Simple;
 use URI::Escape;
-
-use Data::Dumper;
 
 sub new {
     my $class = shift;
@@ -49,7 +48,7 @@ sub _google {
                 $line .= " | $_->{unescapedUrl} - $_->{title}";
             }
             $line =~ s/<\/?b>//g;
-            $con->privmsg($to, $line);
+            $con->privmsg($to, encode("utf8", $line));
 
             return;
         }
