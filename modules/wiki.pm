@@ -29,7 +29,9 @@ sub _wiki {
     my $self = shift;
     my $con = shift;
     my $event = shift;
-   
+    
+    my $to = $event->{type} eq 'msg' ? $event->{nick} : $event->{to}[0];
+
     my $feed = {};
     my $page = get("$self->{_config}->{url}/feed.php?type=rss2&num=$self->{_config}->{amount}&mode=recent&linkto=current") || print $!;
 
@@ -40,6 +42,6 @@ sub _wiki {
         $line .= " $_->{title} $_->{link} |"
     }
 
-    $con->privmsg($event->{to}[0], "Recent changes:$line");
+    $con->privmsg($to, "Recent changes:$line");
 }
 1;

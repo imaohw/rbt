@@ -53,11 +53,11 @@ sub run {
     my $self = shift;
 
     my $irc = Net::IRC->new();
-    my $con = $irc->newconn( Nick => $self->{_config}->{bot}->{name},
+    my $con = $irc->newconn( Nick => $self->{_config}->{plugins}->{default}->{name},
                              Server => $self->{_config}->{server}->{hostname},
                              Port => $self->{_config}->{server}->{port},
-                             Username => $self->{_config}->{bot}->{username},
-                             Ircname => $self->{_config}->{bot}->{realname},
+                             Username => $self->{_config}->{server}->{username},
+                             Ircname => $self->{_config}->{server}->{realname},
                              SSL => $self->{_config}->{server}->{ssl}
                             );
     #closure magic
@@ -84,9 +84,9 @@ sub _handle_event {
 sub _msg {
     my ($self, $con, $event) = @_;
     
-    if(($self->{_config}->{bot}->{callsign} eq substr(@{$event->{args}}[0],0,1)) || $event->{type} eq 'msg') {
+    if(($self->{_config}->{plugins}->{default}->{callsign} eq substr(@{$event->{args}}[0],0,1)) || $event->{type} eq 'msg') {
         my $cmd = ${$event->{args}}[0];
-        $cmd =~ s/^$self->{_config}->{bot}->{callsign}//;
+        $cmd =~ s/^$self->{_config}->{plugins}->{default}->{callsign}//;
         my @cl = split(/ /, $cmd);
 
         if($cl[0]) {
@@ -119,22 +119,21 @@ sub _write_default_config {
     my $config_file = shift;
 
     my $conf = {
-        bot => {
-            name => 'rbt',
-            username => 'rbt',
-            realname => 'rbt',
-            callsign => '!'
-        },
         server => {
             hostname => "irc.example.com",
             port => "6667",
-            ssl => "0"
+            ssl => "0",
+            username => 'rbt',
+            realname => 'rbt',
+
         },
         plugins => {
             default => { 
                 channels => [
                     '#test'
-                ]
+                ],
+                name => "rbt",
+                callsign => '!'
             },
             wiki => {
                 url => 'http://dokuwiki.example.com',
@@ -146,6 +145,15 @@ sub _write_default_config {
                 roulette => {
                     bantime => 300
                 }
+            },
+            web => {},
+            admin => {
+                NICKNAME => 'PASSWORT'
+            },
+            flyspray => {
+                url => "http://flyspray.example.com",
+                num => "5",
+                project => "2"
             }
         }
     };
@@ -157,7 +165,38 @@ sub _write_default_config {
 }
 
 package main;
-my $bot = rbt->new("conf.json");
-$bot->load_modules("modules");
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+
+sub print_help {
+    print "$0 [-c configfile] [-m module_dir]\n";
+    print "  OPTIONS\n";
+    print "    -c,  --config        Config file(Default: conf.json)\n";
+    print "    -m,  --modules       Module directory(Default: modules)\n";
+    print "    -h,  --help          Print this help\n";
+}
+
+
+my $opt = {
+    config => 'conf.json',
+    modules => 'modules'
+};
+
+exit 1 if !GetOptions($opt,
+              'config|c=s',
+              'modules|m=s',
+              'help|h'
+          );
+
+if($opt->{help}) {
+    print_help();
+    exit 0;
+}
+
+my $bot = rbt->new($opt->{config});
+$bot->load_modules($opt->{modules});
 $bot->run;
 
