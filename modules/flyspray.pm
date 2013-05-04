@@ -49,7 +49,7 @@ sub _bugs {
         if($cont =~ /<div id="taskdetailstext">(.*?)<\/div>/) {
             my $text = $1;
             $text =~ s/<.*?>/ /g;
-            $con->privmsg($to, $text);
+            $con->privmsg($to, "Task: $text");
         }
 
     } else {
