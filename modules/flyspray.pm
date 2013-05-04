@@ -46,7 +46,6 @@ sub _bugs {
         $cont =~ s/\R//g;
         $cont =~ s/\t//g;
 
-        print ("$cont\n");
         if($cont =~ /<div id="taskdetailstext">(.*?)<\/div>/) {
             my $text = $1;
             $text =~ s/<.*?>/ /g;
