@@ -29,23 +29,23 @@ sub _rainbow {
     my $cl = shift;
 
     my $c = {
-        white => "\x3"."0",
-        black => "\x3"."1",
-        blue => "\x3"."2",
-        green => "\x3"."3",
-        red => "\x3"."4",
-        brown => "\x3"."5",
-        purple => "\x3"."6",
-        orange => "\x3"."7",
-        yellow => "\x3"."8",
-        light_green => "\x3"."9",
-        teal => "\x3"."10",
-        light_cyan => "\x3"."11",
-        light_blue => "\x3"."12",
-        pink => "\x3"."13",
-        grey => "\x3"."14",
-        light_grey => "\x3"."15",
-        reset => "\x3"
+        white => "\x0300",
+        black => "\x0301",
+        blue => "\x0302",
+        green => "\x0303",
+        red => "\x0304",
+        brown => "\x0305",
+        purple => "\x0306",
+        orange => "\x0307",
+        yellow => "\x0308",
+        light_green => "\x0309",
+        teal => "\x0310",
+        light_cyan => "\x0311",
+        light_blue => "\x0312",
+        pink => "\x0313",
+        grey => "\x0314",
+        light_grey => "\x0315",
+        reset => "\x03"
     };
     
     unless($cl->[1]) {
