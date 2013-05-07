@@ -36,7 +36,7 @@ sub _print_title {
 
     if($event->{args}[0] =~ /(https?:\/\/.*?)( |$)/) {
         my $url = $1;
-        my $ua = LWP::UserAgent->new();
+        my $ua = LWP::UserAgent->new(ssl_opts => { verify_hostname => 0 });
         my $res = $ua->head($url);
         if($res->header('Content-Type') =~ /text\/html.*/) {
             $res = $ua->get($url);

@@ -65,6 +65,10 @@ sub run {
     my $evth = sub { $self->_handle_event(@_); };
     my $pubh = sub { $self->_msg(@_); };
     $con->add_global_handler('endofmotd', $evth);
+    $con->add_global_handler('join', $evth);
+    $con->add_global_handler('part', $evth);
+    $con->add_global_handler('quit', $evth);
+    $con->add_global_handler('namreply', $evth);
     $con->add_global_handler('public', $pubh);
     $con->add_global_handler('msg', $pubh);
     $irc->start;
@@ -77,7 +81,7 @@ sub _handle_event {
 
     foreach(keys($self->{_modules})) {
         if($self->{_modules}->{$_}->{events}->{$event_name}) {
-            $self->{_modules}->{$_}->{events}->{$event_name}->($self->{_modules}->{$_}->{instance}, ($con, $event));
+            $self->{_modules}->{$_}->{events}->{$event_name}->($self->{_modules}->{$_}->{instance}, ($con, $event, $self->{_modules}));
         }
     }
 }
