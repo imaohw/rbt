@@ -30,6 +30,11 @@ sub get_event_handlers {
     return { 'public' => \&seen::_update_database };
 }
 
+sub get_help {
+    my $self = shift;
+    return {};
+}
+
 sub _read_database {
     my $self = shift;
     

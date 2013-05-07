@@ -25,6 +25,11 @@ sub get_event_handlers {
     return {};
 }
 
+sub get_help {
+    my $self = shift;
+    return {};
+}
+
 sub _wiki {
     my $self = shift;
     my $con = shift;

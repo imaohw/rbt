@@ -42,7 +42,8 @@ sub load_modules {
         $self->{_modules}->{$_} = {
             instance => $module,
             events => $module->get_event_handlers,
-            commands => $module->get_commands
+            commands => $module->get_commands,
+            help => $module->get_help
         };
         
         print "Module loaded: $_\n";
@@ -92,7 +93,7 @@ sub _msg {
         if($cl[0]) {
             foreach(keys($self->{_modules})) {
                 if($self->{_modules}->{$_}->{commands}->{$cl[0]}) {
-                    $self->{_modules}->{$_}->{commands}->{$cl[0]}->($self->{_modules}->{$_}->{instance}, ($con, $event, \@cl));
+                    $self->{_modules}->{$_}->{commands}->{$cl[0]}->($self->{_modules}->{$_}->{instance}, ($con, $event, \@cl, $self->{_modules}));
                 }
             }
         }
@@ -132,8 +133,9 @@ sub _write_default_config {
                 channels => [
                     '#test'
                 ],
-                name => "rbt",
-                callsign => '!'
+                name => 'rbt',
+                callsign => '!',
+                usermodes => 'B'
             },
             wiki => {
                 url => 'http://dokuwiki.example.com',

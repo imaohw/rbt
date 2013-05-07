@@ -24,6 +24,11 @@ sub get_event_handlers {
     return { 'public' => \&url::_print_title };
 }
 
+sub get_help {
+    my $self = shift;
+    return {};
+}
+
 sub _print_title {
     my $self = shift;
     my $con = shift;
