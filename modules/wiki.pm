@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use utf8;
 
-use LWP::Simple;
+use LWP::UserAgent;
 use XML::RSSLite;
 
 sub new {
@@ -38,9 +38,13 @@ sub _wiki {
     my $to = $event->{type} eq 'msg' ? $event->{nick} : $event->{to}[0];
 
     my $feed = {};
-    my $page = get("$self->{_config}->{url}/feed.php?type=rss2&num=$self->{_config}->{amount}&mode=recent&linkto=current") || print $!;
+    my $res = LWP::UserAgent->new(ssl_opts => { verify_hostname => 0 })->get("$self->{_config}->{url}/feed.php?type=rss2&num=$self->{_config}->{amount}&mode=recent&linkto=current");
 
-    parseRSS($feed, \$page);
+    if($res->header('Client-Warning') && $res->header('Client-Warning') eq 'Internal response') {
+        return;
+    }
+    my $cont = $res->content;
+    parseRSS($feed, \$cont);
     
     my $line = "";
     foreach(@{$feed->{item}}) {
