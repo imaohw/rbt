@@ -14,7 +14,10 @@ sub new {
 
 sub get_commands {
     my $self = shift;
-    return { 'rainbow' => \&text::_rainbow };
+    return { 
+        'rainbow' => \&text::_rainbow,
+        'morse' => \&text::_morse
+    };
 }
 
 sub get_event_handlers {
@@ -25,6 +28,42 @@ sub get_event_handlers {
 sub get_help {
     my $self = shift;
     return {};
+}
+
+sub _morse {
+    my $self = shift;
+    my $con = shift;
+    my $event = shift;
+    my $cl = shift;
+
+    unless($cl->[1]) {
+        return;
+    }
+    shift($cl);
+
+
+    my $to = $event->{type} eq 'msg' ? $event->{nick} : $event->{to}[0];
+
+    my $lt = {
+        '.' =>  '.-.-.-', ',' =>  '--..--', ':' =>  '---...', '?' =>  '..--..',
+        "'" =>  '.----.', '-' =>  '-....-', ';' =>  '-.-.-', '/' =>  '-..-.',
+        '(' =>  '-.--.', ')' =>  '-.--.-', '"' =>  '.-..-.', '_' =>  '..--.-',
+        '=' =>  '-...-', '+' =>  '.-.-.', '!' =>  '-.-.--', '@' =>  '.--.-.',
+        A => '.-', B => '-...', C => '-.-.', D => '-..', E => '.', F => '..-.',
+        G => '--.', H => '....', I => '..', J => '.---', K => '-.-', L => '.-..',
+        M => '--', N => '-.', O => '---', P => '.--.', Q => '--.-', R => '.-.',
+        S => '...', T => '-', U => '..-', V => '...-', W => '.--', X => '-..-',
+        Y => '-.--', Z => '--..', 0 => '-----', 1 => '.----', 2 => '..---',
+        3 => '...--', 4 => '....-', 5 => '.....', 6 => '-....', 7 => '--...',
+        8 => '---..', 9 => '----.'
+    };
+
+    my $line = "";
+
+    foreach(split(//, uc(join(" ", @$cl)))) {
+        $line .= $lt->{$_} ? $lt->{$_} : $_;
+    }
+    $con->privmsg($to, $line);
 }
 
 sub _rainbow {
@@ -72,5 +111,4 @@ sub _rainbow {
 
     $con->privmsg($to, "$line");
 }
-
 1;
